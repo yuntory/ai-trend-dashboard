@@ -1,0 +1,19 @@
+[api/platform-stats] {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.characters_trend' in the schema cache"
+}
+[api/genre-stats] {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.characters_trend' in the schema cache"
+}
+[api/trending] {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.characters_trend' in the schema cache"
+}
+^C^C

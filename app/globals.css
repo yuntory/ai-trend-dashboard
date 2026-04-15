@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: #07090f;
+  color: #f5f7fb;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}

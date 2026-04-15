@@ -1,0 +1,47 @@
+name: Scrape Character Trends
+
+on:
+  schedule:
+    - cron: "0 3,15 * * *"
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        working-directory: scripts/scraper/python
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browser
+        run: python -m playwright install --with-deps chromium
+
+      - name: Run scraper
+        env:
+          SCRAPER_TARGET_URL: ${{ secrets.SCRAPER_TARGET_URL }}
+          SCRAPER_SERVICE_NAME: ${{ vars.SCRAPER_SERVICE_NAME || '제타' }}
+          SCRAPER_PERIOD: daily
+          SCRAPER_MAX_ITEMS: 20
+          SCRAPER_CARD_SELECTOR: ${{ vars.SCRAPER_CARD_SELECTOR || '.ranking-card' }}
+          SCRAPER_NAME_SELECTOR: ${{ vars.SCRAPER_NAME_SELECTOR || '.character-name' }}
+          SCRAPER_IMAGE_SELECTOR: ${{ vars.SCRAPER_IMAGE_SELECTOR || 'img.character-image' }}
+          SCRAPER_CHAT_COUNT_SELECTOR: ${{ vars.SCRAPER_CHAT_COUNT_SELECTOR || '.chat-count' }}
+          SCRAPER_TAG_SELECTOR: ${{ vars.SCRAPER_TAG_SELECTOR || '.genre-tag' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_TABLE_NAME: characters_trend
+          SUPABASE_UPSERT_KEY: source_key,trend_date,period
+        run: python scrape_rankings.py

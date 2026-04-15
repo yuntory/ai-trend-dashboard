@@ -1,0 +1,19 @@
+
+> ai-trend-dashboard@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.15
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.100:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1507ms
+ ○ Compiling /api/platform-stats ...
+ ✓ Compiled /api/platform-stats in 860ms (338 modules)
+ GET /api/platform-stats 500 in 1749ms
+ ✓ Compiled /api/genre-stats in 244ms (340 modules)
+ GET /api/genre-stats 500 in 482ms
+ ✓ Compiled /api/trending in 115ms (342 modules)
+ GET /api/trending 500 in 226ms
+ ✓ Compiled in 25ms
