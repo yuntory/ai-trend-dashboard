@@ -9,7 +9,7 @@ interface CharacterCardProps {
   metricType: 'chat_count' | 'view_count';
 }
 
-export const CharacterCard = ({ character, rank, metricType }: CharacterCardProps) => {
+const CharacterCard = ({ character, rank, metricType }: CharacterCardProps) => {
   const {
     id,
     character_name,
@@ -96,3 +96,5 @@ export const CharacterCard = ({ character, rank, metricType }: CharacterCardProp
     </div>
   );
 };
+
+export default CharacterCard;
