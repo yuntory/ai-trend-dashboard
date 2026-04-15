@@ -10,9 +10,11 @@ interface CharacterCardProps {
 }
 
 export const CharacterCard = ({ character, rank, metricType }: CharacterCardProps) => {
+  // 어떤 이름표가 들어와도 에러 안 나게 안전하게 이름 가져오기
+  const displayName = (character as any).character_name || (character as any).name || 'Unknown Character';
+  
   const {
     id,
-    character_name,
     chat_count,
     view_count,
     genre_tags,
@@ -31,12 +33,11 @@ export const CharacterCard = ({ character, rank, metricType }: CharacterCardProp
 
   return (
     <div className="overflow-hidden rounded-xl border border-dashboard-line bg-dashboard-panel shadow-lg transition-all hover:translate-y-[-4px] hover:border-dashboard-accent/30">
-      {/* 이미지 영역 */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-dashboard-panelSoft">
         {image_url ? (
           <Image
             src={image_url}
-            alt={character_name}
+            alt={displayName}
             fill
             className="object-cover transition-transform duration-500 hover:scale-110"
             unoptimized
@@ -54,17 +55,14 @@ export const CharacterCard = ({ character, rank, metricType }: CharacterCardProp
         </div>
       </div>
 
-      {/* 정보 영역 */}
       <div className="p-4">
         <h3 className="mb-2 truncate text-sm font-bold text-dashboard-textMain">
-          {character_name}
+          {displayName}
         </h3>
         
-        {/* 태그 영역 */}
         <div className="mb-4 flex flex-wrap gap-2 h-6 overflow-hidden">
           {[primaryTag, secondaryTag]
             .filter(tag => tag && tag.trim() !== "") 
-            .filter((tag, index, self) => self.indexOf(tag) === index)
             .map((tag) => (
               <span 
                 key={`tag-${id}-${tag}`} 
@@ -76,7 +74,6 @@ export const CharacterCard = ({ character, rank, metricType }: CharacterCardProp
           }
         </div>
 
-        {/* 지표 영역 */}
         <div className="flex items-center justify-between border-t border-dashboard-line pt-3 text-[11px]">
           <span className="text-dashboard-textMuted">
             {metricType === 'chat_count' ? '총 채팅 수' : '총 조회 수'}
