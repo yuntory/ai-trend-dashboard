@@ -1,15 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
-import { CharacterTrend } from '@/types/trend';
+import { CharacterItem } from '@/types/trend';
 import { MessageSquare, Eye } from 'lucide-react';
 
 interface CharacterCardProps {
-  character: CharacterTrend;
+  character: CharacterItem;
   rank: number;
   metricType: 'chat_count' | 'view_count';
 }
 
-const CharacterCard = ({ character, rank, metricType }: CharacterCardProps) => {
+export const CharacterCard = ({ character, rank, metricType }: CharacterCardProps) => {
   const {
     id,
     character_name,
@@ -96,5 +96,3 @@ const CharacterCard = ({ character, rank, metricType }: CharacterCardProps) => {
     </div>
   );
 };
-
-export default CharacterCard;
