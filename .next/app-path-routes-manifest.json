@@ -1,0 +1,9 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/genre-stats/route": "/api/genre-stats",
+  "/api/platform-stats/route": "/api/platform-stats",
+  "/api/platform-comparison/route": "/api/platform-comparison",
+  "/api/trending-characters/route": "/api/trending-characters",
+  "/api/trending/route": "/api/trending",
+  "/page": "/"
+}

@@ -1,4 +1,5 @@
 import { CharacterCard } from "@/components/dashboard/CharacterCard";
+import { normalizeCharacter } from "@/lib/normalize-character";
 import type { CharacterItem } from "@/types/trend";
 
 type CharacterGridProps = {
@@ -16,6 +17,8 @@ export function CharacterGrid({
   metricLabel = "총 채팅수",
   metricKey = "chatCount",
 }: CharacterGridProps) {
+  const normalizedCharacters = characters.map((character) => normalizeCharacter(character));
+
   return (
     <section className="min-w-0">
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -27,7 +30,7 @@ export function CharacterGrid({
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {characters.map((character, index) => (
+        {normalizedCharacters.map((character, index) => (
           <CharacterCard
             key={character.id}
             character={character}
@@ -38,7 +41,7 @@ export function CharacterGrid({
         ))}
       </div>
 
-      {!characters.length && (
+      {!normalizedCharacters.length && (
         <div className="rounded-lg border border-dashboard-line bg-dashboard-panel p-8 text-center text-sm text-dashboard-muted shadow-panel">
           No character data yet.
         </div>

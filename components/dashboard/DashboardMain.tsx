@@ -7,6 +7,7 @@ import { CharacterGrid } from "@/components/dashboard/CharacterGrid";
 import { KeywordList } from "@/components/dashboard/KeywordList";
 import { PeriodTabs } from "@/components/dashboard/PeriodTabs";
 import { PlatformShareChart } from "@/components/dashboard/PlatformShareChart";
+import { normalizeCharacter } from "@/lib/normalize-character";
 import { cn } from "@/lib/utils";
 import { formatCompactNumber } from "@/lib/utils";
 import { periodLabels } from "@/lib/mock-data";
@@ -91,7 +92,7 @@ export function DashboardMain() {
           platformResponse.json(),
         ])) as [TrendingResponse, GenreStatsResponse, PlatformStatsResponse];
 
-        setCharacters(trending.characters || []);
+        setCharacters((trending.characters || []).map((item) => normalizeCharacter(item)));
         setGenreKeywords(
           (genreStats.genres || []).slice(0, 5).map((item) => ({
             keyword: item.genre,
