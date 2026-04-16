@@ -21,31 +21,9 @@ function cleanText(value) {
 
 function getImageUrl(story) {
   const rawUrl = cleanText(
-    story?.thumbnailUrl ||
-      story?.thumbnailURL ||
-      story?.thumbnail_url ||
-      story?.thumbnail ||
-      story?.coverImageUrl ||
-      story?.coverImageURL ||
-      story?.cover_image_url ||
-      story?.coverImage ||
-      story?.imageUrl ||
-      story?.imageURL ||
-      story?.image_url ||
-      story?.mainImageUrl ||
-      story?.mainImageURL ||
-      story?.profileImageUrl ||
-      story?.profileImageURL ||
-      story?.thumbnail?.url ||
-      story?.thumbnail?.src ||
-      story?.cover?.url ||
-      story?.cover?.src ||
-      story?.image?.url ||
-      story?.image?.src ||
-      story?.images?.thumbnail ||
-      story?.images?.thumbnailUrl ||
-      story?.images?.cover ||
-      story?.images?.coverUrl ||
+    story?.imageUrl ||
+      story?.portraitImageUrl ||
+      story?.profileImage?.origin ||
       ""
   );
 
@@ -104,10 +82,17 @@ function mapStoriesToRows(payload) {
         return null;
       }
 
+      const imageUrl = getImageUrl(story);
+
+      if (!imageUrl) {
+        console.warn(`Crack 이미지 URL이 없어 스킵합니다: ${characterName} (${id})`);
+        return null;
+      }
+
       return {
         id,
         character_name: characterName,
-        image_url: getImageUrl(story),
+        image_url: imageUrl,
         service_name: serviceName,
         category,
         genre_tags: Array.isArray(story?.categories)
