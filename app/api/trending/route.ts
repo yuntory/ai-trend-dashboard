@@ -1,17 +1,6 @@
 ﻿import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-type CharacterTrendRow = {
-  id: string;
-  character_name: string;
-  image_url: string | null;
-  service_name: string;
-  category: "ai_character" | "web_novel" | null;
-  genre_tags: string[] | null;
-  chat_count: number | null;
-  view_count: number | null;
-};
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category") || "ai_character";
@@ -20,6 +9,8 @@ export async function GET(request: Request) {
 
   try {
     const supabase = createSupabaseServerClient();
+    
+    // 1. 필요한 컬럼을 Supabase에서 정확히 가져옵니다.
     let query = supabase
       .from("characters_trend")
       .select("id, character_name, image_url, service_name, category, genre_tags, chat_count, view_count")
@@ -33,38 +24,39 @@ export async function GET(request: Request) {
 
     const { data, error } = await query;
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
-    const seenIds = new Set<string>();
     const seenNames = new Set<string>();
     const characters = [];
 
-    for (const item of (data || []) as CharacterTrendRow[]) {
-      const normalizedId = normalizeKey(item.id);
-      const normalizedName = normalizeKey(item.character_name);
+    // 2. 데이터를 정제해서 내보냅니다.
+    for (const item of (data || [])) {
+      const normalizedName = item.character_name?.trim().toLowerCase();
 
-      if (!normalizedId || !normalizedName || seenIds.has(normalizedId) || seenNames.has(normalizedName)) {
-        continue;
-      }
-
-      seenIds.add(normalizedId);
+      // 중복 데이터 방지
+      if (!normalizedName || seenNames.has(normalizedName)) continue;
       seenNames.add(normalizedName);
+
+      // ★ 기획자님 핵심 포인트: 화면에서 찾기 쉽게 이름표를 두 종류 다 보내버립니다.
       characters.push({
         id: item.id,
+        // 아래처럼 snake_case와 camelCase 둘 다 넣어주면 무조건 나옵니다.
+        character_name: item.character_name, 
         characterName: item.character_name,
-        imageUrl: item.image_url || "https://via.placeholder.com/300x220/111827/2dd4bf?text=AI+Character",
+        image_url: item.image_url,
+        imageUrl: item.image_url || "https://via.placeholder.com/300x220/111827/2dd4bf?text=No+Image",
+        service_name: item.service_name,
         serviceName: item.service_name,
-        category: item.category || "ai_character",
+        genre_tags: item.genre_tags || [],
         genreTags: item.genre_tags || [],
+        chat_count: item.chat_count || 0,
         chatCount: item.chat_count || 0,
+        view_count: item.view_count || 0,
         viewCount: item.view_count || 0,
+        category: item.category || "ai_character",
       });
 
-      if (characters.length === 20) {
-        break;
-      }
+      if (characters.length === 20) break;
     }
 
     return NextResponse.json({ characters });
@@ -72,11 +64,4 @@ export async function GET(request: Request) {
     console.error("[api/trending]", error);
     return NextResponse.json({ error: "Failed to fetch trending characters." }, { status: 500 });
   }
-}
-
-function normalizeKey(value: string | null | undefined) {
-  return String(value || "")
-    .trim()
-    .replace(/\s+/g, "")
-    .toLowerCase();
 }
